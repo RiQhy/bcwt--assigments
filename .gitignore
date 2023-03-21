@@ -1,3 +1,4 @@
 node_modules/
+docs/
 uploads/*
 !uploads/.gitkeep

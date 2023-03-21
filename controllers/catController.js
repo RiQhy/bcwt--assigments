@@ -21,7 +21,7 @@ const getCat = (req, res) => {
 };
 const postCat = (req, res) =>{
     console.log('posting a cat', req.body, req.file);
-    res.status[200].send('uploads a cat image' + req.body.??);
+    //res.status[200].send('uploads a cat image' + req.body.??);
 };
 
 const putCat = (req, res) => {
