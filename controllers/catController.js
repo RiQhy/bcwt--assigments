@@ -21,7 +21,10 @@ const getCat = (req, res) => {
 };
 const postCat = (req, res) =>{
     console.log('posting a cat', req.body, req.file);
-    //res.status[200].send('uploads a cat image' + req.body.??);
+    const newCat = req.body;
+    newCat.filename = 'http:localhost:3000/' + req.file.path;
+    cats.push(newCat);
+    res.status[201].send('new cat image');
 };
 
 const putCat = (req, res) => {
@@ -30,8 +33,6 @@ const putCat = (req, res) => {
 const deleteCat = (req, res) => {
     res.send('From this endpoint you can delete a cat.');
 };
-
-
 
 const catController = {getCatList, getCat, postCat, putCat, deleteCat };
 module.exports = catController;
