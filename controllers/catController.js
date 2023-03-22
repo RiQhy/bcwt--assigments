@@ -22,7 +22,7 @@ const getCat = (req, res) => {
 const postCat = (req, res) =>{
     console.log('posting a cat', req.body, req.file);
     const newCat = req.body;
-    newCat.filename = 'http:localhost:3000/' + req.file.path;
+    newCat.filename = 'http:localhost:3000/uploads/' + req.file.filename;
     cats.push(newCat);
     res.status[201].send('new cat image');
 };
