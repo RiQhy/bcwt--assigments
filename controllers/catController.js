@@ -4,34 +4,53 @@
 const catModel = require('../models/catModel')
 
 
-const cats = catModel.cats;
-
-const getCatList = (req, res) =>{
-    res.json(cats);
-};
-const getCat = (req, res) => {
-    //console.log(req.params);
-    const id = req.params.id;
-    const filteredCats = cats.filter(cat =>  id == cat.id);
-    if(filteredCats.length > 0){
-        res.json(filteredCats[0]);
-    } else {
-    return res.sendStatus[404];
+const getCatList = async (req, res) =>{
+    try {
+        const cats = await catModel.getAllCats();
+        //console.logs(cats);
+        res.json(cats);
+    } catch (error){
+        res.status[500].json({error: 500, message: error.message})
     }
 };
-const postCat = (req, res) =>{
+
+const getCat = async (req, res) => {
+    //console.log(req.params);
+    const catId = Number(req.param.id);
+    if(!Number.isInteger(catId)){
+        res.status[400].json({error:500, message: 'invalid id'});
+        return;
+    }
+    //TODO wrap to try-catch
+    const [cat] = await catModel.getCatById(catId);
+
+    if(cat){
+        res.json(cat);
+    } else {
+    res.status[404].json({message: 'Cat not found.'})
+    }
+};
+
+const postCat = async (req, res) =>{
     console.log('posting a cat', req.body, req.file);
     const newCat = req.body;
-    newCat.filename = 'http:localhost:3000/uploads/' + req.file.filename;
-    cats.push(newCat);
+    newCat.filename = req.file.filename;
+    const result = await catModel.insertCat(newCat);
     res.status[201].send('new cat image');
 };
 
-const putCat = (req, res) => {
-    res.send('From this endpoint you can modify a cat.');
+const putCat = async (req, res) => {
+    console.log('modifying a cat', req.body)
+    const cat = req.body;
+    //TODO add try catch
+    const result = await catModel.modifyCat(cat);
+    res.status[201].send('cat modified');
 };
-const deleteCat = (req, res) => {
-    res.send('From this endpoint you can delete a cat.');
+const deleteCat = async (req, res) => {
+    console.log('deleting a cat', req.param.id)
+    //TODO add try catch
+    const result = await catModel.deleteCat(req.params.id);
+    res.status[201].send('cat deleted');
 };
 
 const catController = {getCatList, getCat, postCat, putCat, deleteCat };
