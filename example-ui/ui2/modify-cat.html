@@ -21,10 +21,24 @@
             <div class="form-wrapper">
                 <h3>Modify cat</h3>
                 <form action="http://localhost:3000/cat" id="modCatForm" class="light-border">
-                    <input class="light-border" type="text" name="name" placeholder="Name">
-                    <input class="light-border" type="text" name="birthdate" placeholder="Birthdate: YYYY-MM-DD">
-                    <input class="light-border" type="number" step="0.1" name="weight" placeholder="Weight">
-                    <select class="light-border add-owner" name="owner">
+                    <input class="light-border" type="text" name="name" placeholder="Name"
+                        required>
+                    <input 
+                        class="light-border" 
+                        type="date" 
+                        name="birthdate" 
+                        placeholder="Birthdate: YYYY-MM-DD"
+                        required>
+                    <input 
+                        class="light-border" 
+                        type="number" 
+                        step="0.1" 
+                        name="weight" 
+                        placeholder="Weight"
+                        required
+                        min="'0.1"
+                        max="50">
+                    <select class="light-border add-owner" name="owner" required>
                         <option value="">Select owner</option>
                     </select>
                     <input type="hidden" name="id">

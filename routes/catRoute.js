@@ -8,10 +8,11 @@ const catController = require('../controllers/catController');
 
 const upload = multer({next: '../uploads'});
 
-router.get('/', catController.getCatList);
-router.get('/:id', catController.getCat);
-router.post('/', upload.single('/cat') ,catController.postCat);
-router.put('/', catController.putCat);
-router.delete('/:id', catController.deleteCat);
-
+router.route('/')
+    .get(catController.getCatList)
+    .post(upload.single('cat') ,catController.postCat)
+    .put(catController.putCat);
+router.route('/:id')
+    .get(catController.getCat)
+    .delete(catController.deleteCat);
 module.exports = router;

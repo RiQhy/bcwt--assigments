@@ -52,7 +52,7 @@ const putCat = async (req, res) => {
     //console.log('modifying a cat', req.body)
     const cat = req.body;
     try{
-        const result = await catModel.modifyCat;
+        const result = await catModel.modifyCat(cat);
         res.status[201].json({message: 'cat modified'});
     } catch(error){
         res.status[200].json({error: 500, message: error.message});
@@ -63,7 +63,7 @@ const deleteCat = async (req, res) => {
     //console.log('deleting a cat', req.param.id)
     //TODO add try catch
     try{
-        const result = await catModel.deleteCat;
+        const result = await catModel.deleteCat(req.params.id);
         res.status[201].json({message: 'cat deleted'});
     } catch(error){
         res.status[201].json({error:500, message: error.message});
