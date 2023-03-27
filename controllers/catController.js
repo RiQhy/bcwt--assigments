@@ -6,8 +6,13 @@ const catModel = require('../models/catModel')
 
 const getCatList = async (req, res) =>{
     try {
-        const cats = await catModel.getAllCats();
+        let cats = await catModel.getAllCats();
         //console.logs(cats);
+        cats = cats.map(cat => {
+            //convert ISO date to date only
+            cat.birthdate = cat.birthdate.toISOString().split('T')[0];
+            return cat;
+        });
         res.json(cats);
     } catch (error){
         res.status[500].json({error: 500, message: error.message})
@@ -16,18 +21,17 @@ const getCatList = async (req, res) =>{
 
 const getCat = async (req, res) => {
     //console.log(req.params);
-    const catId = Number(req.param.id);
+    const catId = Number(req.params.id);
     if(!Number.isInteger(catId)){
         res.status[400].json({error:500, message: 'invalid id'});
         return;
     }
     //TODO wrap to try-catch
-    const [cat] = await catModel.getCatById(catId);
-
-    if(cat){
-        res.json(cat);
-    } else {
-    res.status[404].json({message: 'Cat not found.'})
+    try{
+        const [cat] = await catModel.getCatById(catId);
+        res.json(cat)
+    } catch(error){
+        res.status[404].json({error:500, message: error.message});
     }
 };
 
@@ -35,22 +39,35 @@ const postCat = async (req, res) =>{
     console.log('posting a cat', req.body, req.file);
     const newCat = req.body;
     newCat.filename = req.file.filename;
-    const result = await catModel.insertCat(newCat);
-    res.status[201].send('new cat image');
+    try{
+        const result = await catModel.insertCat(newCat);
+        res.status[201].json({message: 'new cat image'});
+    }catch(error){
+        res.status[500].json({error: 500, message: error.message})
+    }
+    
 };
 
 const putCat = async (req, res) => {
-    console.log('modifying a cat', req.body)
+    //console.log('modifying a cat', req.body)
     const cat = req.body;
-    //TODO add try catch
-    const result = await catModel.modifyCat(cat);
-    res.status[201].send('cat modified');
+    try{
+        const result = await catModel.modifyCat;
+        res.status[201].json({message: 'cat modified'});
+    } catch(error){
+        res.status[200].json({error: 500, message: error.message});
+    }
 };
+
 const deleteCat = async (req, res) => {
-    console.log('deleting a cat', req.param.id)
+    //console.log('deleting a cat', req.param.id)
     //TODO add try catch
-    const result = await catModel.deleteCat(req.params.id);
-    res.status[201].send('cat deleted');
+    try{
+        const result = await catModel.deleteCat;
+        res.status[201].json({message: 'cat deleted'});
+    } catch(error){
+        res.status[201].json({error:500, message: error.message});
+    }
 };
 
 const catController = {getCatList, getCat, postCat, putCat, deleteCat };

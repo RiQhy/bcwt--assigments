@@ -11,4 +11,4 @@ router.get('/', userController.getUserList);
 router.get('/:id', userController.getUser);
 router.post('/', userController.postUser);
 router.put('/', userController.putUser);
-router.delete('/', userController.deleteUser);
+router.delete('/:id', userController.deleteUser);

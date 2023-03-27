@@ -8,6 +8,7 @@ const getAllCats = async () => {
         const sql = `SELECT wop_cat.*, wop_user.name AS ownername FROM wop_cat 
                 LEFT JOIN wop_user ON wop_cat.owner = wop_user.user_id`;
     const [rows] = await promisePool.query(sql);
+    console.log(rows);
     return rows;
   } catch (e) {
     console.error("error", e.message);
