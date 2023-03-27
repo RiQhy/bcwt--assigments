@@ -12,3 +12,5 @@ router.get('/:id', userController.getUser);
 router.post('/', userController.postUser);
 router.put('/', userController.putUser);
 router.delete('/:id', userController.deleteUser);
+
+//TODO: add validation & 

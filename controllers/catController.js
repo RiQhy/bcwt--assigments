@@ -1,8 +1,8 @@
 'use strict';
 // catController
 
-const catModel = require('../models/catModel')
-
+const catModel = require('../models/catModel');
+const {validationResult} = require('express-validator');
 
 const getCatList = async (req, res) =>{
     try {
@@ -15,7 +15,7 @@ const getCatList = async (req, res) =>{
         });
         res.json(cats);
     } catch (error){
-        res.status[500].json({error: 500, message: error.message})
+        res.status[500].json({error: 500, message: error.message});
     }
 };
 
@@ -36,12 +36,29 @@ const getCat = async (req, res) => {
 };
 
 const postCat = async (req, res) =>{
-    console.log('posting a cat', req.body, req.file);
+    //console.log('posting a cat', req.body, req.file);
+    if(!req.file){
+        res.status[400].json({
+            status: 400,
+            message: 'Invalid or missing image file'
+        });
+        return;
+    }
+    const validationErrors = validationResult(req);
+    if(!validationErrors.isEmpty()){
+        res.status[400].json({
+            status: 400,
+            errors: validationErrors.array(), 
+            message: 'Invalid data'
+        });
+        return;
+    }
+    
     const newCat = req.body;
     newCat.filename = req.file.filename;
     try{
         const result = await catModel.insertCat(newCat);
-        res.status[201].json({message: 'new cat image'});
+        res.status[201].json({message: 'new cat added'});
     }catch(error){
         res.status[500].json({error: 500, message: error.message})
     }
@@ -50,12 +67,21 @@ const postCat = async (req, res) =>{
 
 const putCat = async (req, res) => {
     //console.log('modifying a cat', req.body)
+    const validationErrors = validationResult(req);
+    if(!validationErrors.isEmpty()){
+        res.status[400].json({
+            status: 400,
+            errors: validationErrors.array(), 
+            message: 'Invalid PUT data'
+        });
+        return;
+    }
     const cat = req.body;
     try{
         const result = await catModel.modifyCat(cat);
         res.status[201].json({message: 'cat modified'});
     } catch(error){
-        res.status[200].json({error: 500, message: error.message});
+        res.status[500].json({error: 500, message: error.message});
     }
 };
 
@@ -66,7 +92,7 @@ const deleteCat = async (req, res) => {
         const result = await catModel.deleteCat(req.params.id);
         res.status[201].json({message: 'cat deleted'});
     } catch(error){
-        res.status[201].json({error:500, message: error.message});
+        res.status[500].json({error:500, message: error.message});
     }
 };
 
