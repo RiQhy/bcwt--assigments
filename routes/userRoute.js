@@ -4,13 +4,26 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
+const {body} = require('express-validator');
 
+
+router.route('/')
+    .get(userController.getUserList)
+    .post(
+        body('name').isAlphanumeric().isLength({min: 1, max: 30}).escape().trim(),
+        body('email').isEmail(),
+        body('password').isAlphanumeric().length({min: 8}),
+        userController.postUser
+    )
+    .put(
+        body('name').isAlphanumeric().isLength({min: 1, max: 30}),
+        body('email').isEmail(),
+        body('password').isAlphanumeric().length({min: 8}),
+        userController.putUser
+    );
+
+router.route('/:id')
+    .get(userController.getUser)
+    .delete(userController.deleteUser);
+    
 module.exports = router;
-
-router.get('/', userController.getUserList);
-router.get('/:id', userController.getUser);
-router.post('/', userController.postUser);
-router.put('/', userController.putUser);
-router.delete('/:id', userController.deleteUser);
-
-//TODO: add validation & 

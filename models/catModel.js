@@ -64,11 +64,11 @@ const modifyCat = async () => {
 };
 const deleteCat = async () => {
   try {
-    const sql = `DELETE FROM wop_cat where cat_id=?`;
+    const sql = `DELETE FROM wop_cat WHERE cat_id=?`;
     const [rows] = await promisePool.query(sql, [id]);
     return rows;
   } catch (e) {
-    console.error("error", e.message);
+    console.error('error', e.message);
     throw new Error('sql delete cat failed');
   }
 };

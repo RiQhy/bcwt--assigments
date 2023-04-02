@@ -6,18 +6,17 @@ const multer = require('multer');
 const router = express.Router();
 const catController = require('../controllers/catController');
 const {body} = require('express-validator');
-const { min } = require('lodash');
 
 const fileFilter = (req, file, cb) => {
     const allowedTypes = ['image/jpeg', 'image/png'];
-    if(allowedTypes.includes(file.minetype)){
-        cb (null,true);
+    if(allowedTypes.includes(file.mimetype)){
+        cb (null, true);
     } else {
         cb(null, false);
     }
 };
 
-const upload = multer({next: '../uploads', fileFilter});
+const upload = multer({dest: 'uploads/', fileFilter});
 
 router.route('/')
     .get(catController.getCatList)
