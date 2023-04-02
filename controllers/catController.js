@@ -15,7 +15,7 @@ const getCatList = async (req, res) =>{
         });
         res.json(cats);
     } catch (error){
-        res.status[500].json({error: 500, message: error.message});
+        res.status(500).json({error: 500, message: error.message});
     }
 };
 
@@ -23,7 +23,7 @@ const getCat = async (req, res) => {
     //console.log(req.params);
     const catId = Number(req.params.id);
     if(!Number.isInteger(catId)){
-        res.status[400].json({error:500, message: 'invalid id'});
+        res.status(400).json({error:500, message: 'invalid id'});
         return;
     }
     //TODO wrap to try-catch
@@ -31,14 +31,14 @@ const getCat = async (req, res) => {
         const [cat] = await catModel.getCatById(catId);
         res.json(cat)
     } catch(error){
-        res.status[404].json({error:500, message: error.message});
+        res.status(404).json({message: 'User not found.'});
     }
 };
 
 const postCat = async (req, res) =>{
     //console.log('posting a cat', req.body, req.file);
     if(!req.file){
-        res.status[400].json({
+        res.status(400).json({
             status: 400,
             message: 'Invalid or missing image file'
         });
@@ -46,7 +46,7 @@ const postCat = async (req, res) =>{
     }
     const validationErrors = validationResult(req);
     if(!validationErrors.isEmpty()){
-        res.status[400].json({
+        res.status(400).json({
             status: 400,
             errors: validationErrors.array(), 
             message: 'Invalid data'
@@ -58,9 +58,9 @@ const postCat = async (req, res) =>{
     newCat.filename = req.file.filename;
     try{
         const result = await catModel.insertCat(newCat);
-        res.status[201].json({message: 'new cat added'});
+        res.status(201).json({message: 'new cat added'});
     }catch(error){
-        res.status[500].json({error: 500, message: error.message})
+        res.status(500).json({error: 500, message: error.message})
     }
     
 };
@@ -69,7 +69,7 @@ const putCat = async (req, res) => {
     //console.log('modifying a cat', req.body)
     const validationErrors = validationResult(req);
     if(!validationErrors.isEmpty()){
-        res.status[400].json({
+        res.status(400).json({
             status: 400,
             errors: validationErrors.array(), 
             message: 'Invalid PUT data'
@@ -79,20 +79,19 @@ const putCat = async (req, res) => {
     const cat = req.body;
     try{
         const result = await catModel.modifyCat(cat);
-        res.status[201].json({message: 'cat modified'});
+        res.status(200).json({message: 'cat modified'});
     } catch(error){
-        res.status[500].json({error: 500, message: error.message});
+        res.status(500).json({error: 500, message: error.message});
     }
 };
 
 const deleteCat = async (req, res) => {
     //console.log('deleting a cat', req.param.id)
-    //TODO add try catch
     try{
         const result = await catModel.deleteCat(req.params.id);
-        res.status[201].json({message: 'cat deleted'});
+        res.status(200).json({message: 'cat deleted'});
     } catch(error){
-        res.status[500].json({error:500, message: error.message});
+        res.status(500).json({error:500, message: error.message});
     }
 };
 
