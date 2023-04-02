@@ -1,6 +1,5 @@
 'use strict';
 
-
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
@@ -12,13 +11,13 @@ router.route('/')
     .post(
         body('name').isAlphanumeric().isLength({min: 1, max: 30}).escape().trim(),
         body('email').isEmail(),
-        body('password').isAlphanumeric().length({min: 8}),
+        body('password').isAlphanumeric().isLength({min: 8}),
         userController.postUser
     )
     .put(
         body('name').isAlphanumeric().isLength({min: 1, max: 30}),
         body('email').isEmail(),
-        body('password').isAlphanumeric().length({min: 8}),
+        body('password').isAlphanumeric().isLength({min: 8}),
         userController.putUser
     );
 

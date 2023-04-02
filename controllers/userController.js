@@ -26,7 +26,7 @@ const getUser = async (req, res) => {
         const [user] = await userModel.getUserById(userId);
         res.json(user);
     }catch(error){
-        res.status(404).json({error: 500, message: error.message});
+        res.status(404).json({message: 'User not found.'});
     }
 };
 

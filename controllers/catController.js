@@ -31,7 +31,7 @@ const getCat = async (req, res) => {
         const [cat] = await catModel.getCatById(catId);
         res.json(cat)
     } catch(error){
-        res.status(404).json({message: 'User not found.'});
+        res.status(404).json({message: 'Cat not found.'});
     }
 };
 
