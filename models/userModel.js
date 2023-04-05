@@ -15,7 +15,7 @@ const getAllUsers = async () => {
 
 const getUserById = async () => {
   try {
-    const sql = `SELECT wop_user.* FROM wop_user WHERE user_id = ?`;
+    const sql = `SELECT user_id, name, email FROM wop_user WHERE user_id = ?`;
     const [rows] = await promisePool.query(sql, [id]);
     return rows;
   } catch (e) {
@@ -66,10 +66,24 @@ const deleteUser = async () => {
   }
 };
 
+//User authentication
+const getUserLogin = async (email) => {
+  try {
+    console.log('get user model for ', email);
+    const [rows] = await promisePool.execute(
+        'SELECT * FROM wop_user WHERE email = ?;',
+        [email]);
+    return rows;
+  } catch (e) {
+    console.log('error', e.message);
+  }
+};
+
 module.exports = {
   getAllUsers,
   getUserById,
   insertUser,
   modifyUser,
-  deleteUser
+  deleteUser,
+  getUserLogin,
 };

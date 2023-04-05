@@ -57,6 +57,7 @@ const postCat = async (req, res) =>{
     const newCat = req.body;
     newCat.filename = req.file.filename;
     try{
+        //use req.user to add correct owner id
         const result = await catModel.insertCat(newCat);
         res.status(201).json({message: 'new cat added'});
     }catch(error){
@@ -77,6 +78,8 @@ const putCat = async (req, res) => {
         return;
     }
     const cat = req.body;
+    //TODO: before modifying a cat you should check that user is the owner of the cat (req.user.user_id == cat.owner)
+    //can be done in catmodel
     try{
         const result = await catModel.modifyCat(cat);
         res.status(200).json({message: 'cat modified'});

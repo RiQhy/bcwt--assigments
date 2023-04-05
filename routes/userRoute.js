@@ -7,6 +7,10 @@ const {body} = require('express-validator');
 
 
 router.route('/')
+    .get(
+        body('token'), 
+        userController.checkToken
+        )
     .get(userController.getUserList)
     .post(
         body('name').isAlphanumeric().isLength({min: 1, max: 30}).escape().trim(),
