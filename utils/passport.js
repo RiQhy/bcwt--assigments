@@ -41,7 +41,7 @@ async (jwtPayload, done) => {
         const user = await getUserById(jwtPayload.user_id);
         return done(null, user);
     } catch(error){
-        return done(err);
+        return done(error);
     }
 })
 );

@@ -13,7 +13,7 @@ const getAllUsers = async () => {
   }
 };
 
-const getUserById = async () => {
+const getUserById = async (id) => {
   try {
     const sql = `SELECT user_id, name, email FROM wop_user WHERE user_id = ?`;
     const [rows] = await promisePool.query(sql, [id]);
