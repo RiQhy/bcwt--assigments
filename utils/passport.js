@@ -43,11 +43,8 @@ const getUserLogin = (email) => {
 passport.serializeUser((id, done) => {
   process.nextTick(() => {
     return done(null, {
-      id: users.user_id,
-      username: users.name,
-      email: users.email
-    }, 
-    {message: 'User serialized'});
+      id
+    });
   });
   console.log("serialize", id);
   // serialize user id by adding it to 'done()' callback
@@ -55,10 +52,11 @@ passport.serializeUser((id, done) => {
 });
 
 // deserialize: get user id from session and get all user data
-passport.deserializeUser(async (id, done) => {
-  id = getUser(id);
+passport.deserializeUser(async(id, done) => {
+  const user = getUser(id);
+  console.log(user);
   process.nextTick(() => {
-    return done(null,id,{message: 'User deserialized'});
+    return done(null,id);
   });
   // get user data by id from getUser
   console.log("deserialize", user);
@@ -70,7 +68,7 @@ passport.use(
   new Strategy((username, password, done) => {
     // get user by username from getUserLogin
     try {
-      const [user] = await getUserLogin(email);
+      const user = getUserLogin(username);
     if(user === undefined){
     // if user is undefined
       return done(null, false);
@@ -80,6 +78,7 @@ passport.use(
     return done(null, false);
     }
     // if all is ok
+    console.log(user);
     return done(null, user.user_id);
     } catch(err){
       return done(err);
