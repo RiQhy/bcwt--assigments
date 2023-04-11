@@ -17,7 +17,7 @@ const getUserById = async (id) => {
   try {
     const sql = `SELECT user_id, name, email FROM wop_user WHERE user_id = ?`;
     const [rows] = await promisePool.query(sql, [id]);
-    return rows;
+    return rows[0];
   } catch (e) {
     console.error("error", e.message);
     throw new Error('sql query failed');
@@ -68,8 +68,8 @@ const deleteUser = async () => {
 
 //User authentication
 const getUserLogin = async (email) => {
+console.log('get user model for ', email);
   try {
-    console.log('get user model for ', email);
     const [rows] = await promisePool.execute(
         'SELECT * FROM wop_user WHERE email = ?;',
         [email]);
