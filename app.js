@@ -9,11 +9,12 @@ const app = express();
 const port = 3000;
 
 app.use((req, res, next) =>{
-  console.log(Date.now() + ': request: ' + req.method + '' + req.path);
+  console.info(new Date() + ': ' + req.method + ' ' + req.path);
   next();
 });
 app.use(express.static('example-ui'));
 app.use('/uploads', express.static('uploads'));
+app.use('/thumbnails', express.static('thumbnails'));
 //Add cors headers
 app.use(cors());
 

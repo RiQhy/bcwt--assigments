@@ -5,6 +5,7 @@ const { getUserLogin, getUserById } = require("../models/userModel");
 const passportJWT = require("passport-jwt");
 const JWTStrategy   = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
+const bcrypt = require('bcryptjs');
 require("dotenv").config();
 
 // local strategy for username password login
@@ -16,7 +17,8 @@ passport.use(
       if (user === undefined) {
         return done(null, false, { message: "Incorrect email." });
       }
-      if (user.password !== password) {
+      const loginOK = await bcrypt.compare(password, user.password);
+      if (!loginOK) {
         return done(null, false, { message: "Incorrect password." });
       }
       return done(null, { ...user }, { message: "Logged In Successfully" }); 
@@ -28,9 +30,8 @@ passport.use(
   })
 );
 
-// TODO: JWT strategy for handling bearer token
-// consider .env for secret, e.g. secretOrKey: process.env.JWT_SECRET
 
+//JWT strategy for handling bearer token
 passport.use(new JWTStrategy({
     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
     secretOrKey   : process.env.JWT_SECRET,

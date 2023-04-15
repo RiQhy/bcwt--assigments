@@ -3,16 +3,12 @@
 
 const catModel = require('../models/catModel');
 const {validationResult} = require('express-validator');
+const {makeThumbnail} = require('../utils/image');
 
 const getCatList = async (req, res) =>{
     try {
-        let cats = await catModel.getAllCats();
-        //console.logs(cats);
-        cats = cats.map(cat => {
-            //convert ISO date to date only
-            cat.birthdate = cat.birthdate.toISOString().split('T')[0];
-            return cat;
-        });
+        const cats = await catModel.getAllCats();
+        
         res.json(cats);
     } catch (error){
         res.status(500).json({error: 500, message: error.message});
@@ -56,6 +52,9 @@ const postCat = async (req, res) =>{
     
     const newCat = req.body;
     newCat.filename = req.file.filename;
+    newCat.owner = req.user.user_id;
+    await makeThumbnail(req.file.path, newCat.filename);
+
     try{
         //use req.user to add correct owner id
         const result = await catModel.insertCat(newCat);
@@ -78,8 +77,11 @@ const putCat = async (req, res) => {
         return;
     }
     const cat = req.body;
-    //TODO: before modifying a cat you should check that user is the owner of the cat (req.user.user_id == cat.owner)
-    //can be done in catmodel
+    cat.owner = req.user.user_id;
+    if(req.params.id){
+        cat.id = parseInt(req.params.id);
+    }
+
     try{
         const result = await catModel.modifyCat(cat);
         res.status(200).json({message: 'cat modified'});

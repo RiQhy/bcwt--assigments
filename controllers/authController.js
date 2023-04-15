@@ -17,14 +17,17 @@ const login = (req, res) => {
            res.json({message: err});
        }
        // generate a signed son web token with the contents of user object and return it in the response
-       const token = jwt.sign(user, process.env.JWT_SECRET);
-       //TODO: do you really need to include whole user to token payload?
-       //TODO: at least password should be removed
+       const token = jwt.sign({user_id: user.user_id}, process.env.JWT_SECRET);
        return res.json({user, token});
     });
 })(req, res);
 };
 
+const logout = (req, res) => {
+    res.json({message: 'Logged out!'});
+};
+
 module.exports = {
   login,
+  logout,
 };
