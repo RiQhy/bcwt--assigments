@@ -1,5 +1,5 @@
 'use strict';
-const pool = require("../db/db");
+const pool = require('../db/db');
 const promisePool = pool.promise();
 
 const getAllUsers = async () => {
@@ -24,17 +24,17 @@ const getUserById = async (id) => {
   }
 };
 
-const insertUser = async () => {
+const insertUser = async (user) => {
 try {
   const sql = `INSERT INTO wop_user VALUES (?, ?, ?, ?):`;
-  const [rows] = await promisePool.query(sql, [
-    null,
+  const values = [
     user.name, 
     user.email,
     user.password,
     user.role
-  ]);
-  return rows;
+  ];
+  const [result] = await promisePool.query(sql, values);
+  return result.insertId;
 } catch (e) {
   console.error("error", e.message);
   throw new Error('sql query failed');
@@ -43,13 +43,14 @@ try {
 const modifyUser = async () => {
   try {
     const sql = `UPDATE wop_user SET name=?,email=?,password=?,role=? WHERE _id=?`;
-    const [rows] = await promisePool.query(sql, [
+    const values = [
       user.name, 
       user.email,
-      user.password,
+      user.passwd,
       user.role
-    ]);
-    return rows;
+    ];
+    const [result] = await promisePool.query(sql, values);
+    return result.insertId;
   } catch (e) {
     console.error("error", e.message);
     throw new Error('sql update user failed');

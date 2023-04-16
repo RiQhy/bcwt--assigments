@@ -7,10 +7,6 @@ const {body} = require('express-validator');
 
 
 router.route('/')
-    .get(
-        body('token'), 
-        userController.checkToken
-        )
     .get(userController.getUserList)
     .post(
         body('name').isAlphanumeric().isLength({min: 1, max: 30}).escape().trim(),
@@ -23,10 +19,9 @@ router.route('/')
         body('email').isEmail(),
         body('password').isAlphanumeric().isLength({min: 8}),
         userController.putUser
-    );
-
-router.route('/:id')
-    .get(userController.getUser)
+    )
     .delete(userController.deleteUser);
+router.get('/token', userController.checkToken);
+router.get('/:userId', userController.getUser);
     
 module.exports = router;
